@@ -1,3 +1,10 @@
+export type Stat = {
+  base_stat: number;
+  stat: {
+    name: string;
+  };
+};
+
 export type PokemonsResponseResult = {
   name: string;
   url: string;
@@ -20,7 +27,11 @@ export type PokemonResponse = {
         dream_world: {
           front_default: string;
         };
+        "official-artwork": {
+          front_default: string;
+        };
       };
     };
+    stats: Stat[];
   };
 };

@@ -5,9 +5,10 @@ import Loader from "./Loader";
 
 type PokemonCardProps = {
   name: string;
+  showStats?: boolean;
 };
 
-const PokemonCard: React.FC<PokemonCardProps> = ({ name }) => {
+const PokemonCard: React.FC<PokemonCardProps> = ({ name, showStats }) => {
   const pokemon = useFindPokemon(name);
 
   if (pokemon.isLoading) {
@@ -18,6 +19,8 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ name }) => {
     );
   }
 
+  const otherSprites = pokemon.data?.data.sprites.other;
+
   return (
     <Link
       to={`/${name}`}
@@ -26,15 +29,46 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ name }) => {
       <div className="w-full h-56 flex justify-center">
         <img
           className="w-full h-full object-contain"
-          src={pokemon.data?.data.sprites.other.dream_world.front_default}
+          src={
+            otherSprites?.dream_world.front_default ||
+            otherSprites?.["official-artwork"].front_default
+          }
           alt={pokemon.data?.data.name}
         />
       </div>
-      <div className="font-medium capitalize text-gray-400 transition group-hover:text-gray-700">
+      <div className="font-medium capitalize text-xl text-gray-500 transition group-hover:text-gray-700">
         {pokemon.data?.data.name}
       </div>
+
+      {showStats && (
+        <div className="space-y-2">
+          <header className="font-medium text-gray-500">Stats</header>
+          {pokemon.data?.data.stats.map((stat) => {
+            return (
+              <div className="grid grid-cols-2 items-center space-y-1">
+                <div className="text-gray-500">{stat.stat.name}</div>
+                <div className="flex items-center">
+                  <div className="w-full bg-gray-200 h-3">
+                    <div
+                      style={{ width: `${Math.min(100, stat.base_stat)}%` }}
+                      className="h-full bg-yellow-400"
+                    ></div>
+                  </div>
+                  <div className="text-sm text-gray-400 w-8 text-right">
+                    {stat.base_stat}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </Link>
   );
+};
+
+PokemonCard.defaultProps = {
+  showStats: false,
 };
 
 export default PokemonCard;
