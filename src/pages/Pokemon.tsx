@@ -1,5 +1,4 @@
 import { useNavigate, useParams } from "react-router";
-import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 import PokemonCard from "../components/PokemonCard";
 
